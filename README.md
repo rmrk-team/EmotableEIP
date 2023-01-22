@@ -1,6 +1,6 @@
 ---
 eip: x
-title: Emotable Non-Fungible Tokens
+title: Emotable Extension for Non-Fungible Tokens
 description: x
 author: Bruno Škvorc (@Swader), Cicada (@CicadaNCR), Steven Pineda (@steven2308), Stevan Bogosavljevic (@stevyhacker), Jan Turk (@ThunderDeliverer)
 discussions-to: x
@@ -24,7 +24,7 @@ requires: 165, 721
 The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in RFC 2119.
 
 ```solidity
-/// @title EIP-x Emotable Non-Fungible Tokens
+/// @title EIP-x Emotable Extension for Non-Fungible Tokens
 /// @dev See https://eips.ethereum.org/EIPS/eip-5773
 /// @dev Note: the ERC-165 identifier for this interface is 0x0.
 
