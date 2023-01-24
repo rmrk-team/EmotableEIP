@@ -2,7 +2,7 @@
 eip: x
 title: Emotable Extension for Non-Fungible Tokens
 description: An interface for Non-Fungible Tokens extension allowing for reacting to them using Unicode emojis.
-author: Bruno Škvorc (@Swader), Cicada (@CicadaNCR), Steven Pineda (@steven2308), Stevan Bogosavljevic (@stevyhacker), Jan Turk (@ThunderDeliverer)
+author: Bruno Škvorc (@Swader), Steven Pineda (@steven2308), Stevan Bogosavljevic (@stevyhacker), Jan Turk (@ThunderDeliverer)
 discussions-to: x
 status: Draft
 type: Standards Track
@@ -25,6 +25,7 @@ This EIP introduces new utilities for [EIP-721](./eip-721.md) based tokens in th
 
 - [Interactivity](#interactivity)
 - [Feedback based evolution](#feedback-based-evolution)
+- [Valuation](#valuation)
 
 ### Interactivity
 
@@ -35,6 +36,10 @@ The ability to emote on an NFT introduces the aspect of interactivity to owning 
 Standardized on-chain reactions to NFTs allow for feedback based evolution.
 
 Current solutions are either proprietary or off-chain and therefore subject to manipulation and distrust. Having the ability to track the interaction on-chain allows for trust and objective evaluation of a given token. Designing the tokens to evolve when certain emote thresholds are met incentivizes interaction with the token collection.
+
+### Valuation
+
+Current NFT market heavily relies on previous values the token has been sold for, the lowest price of the listed token and the scarcity data provided by the marketplace. There is no real time indication of admiration or desirability of a specific token. Having the ability for users to emote to the tokens adds the possibility of potential buyers and sellers gageing the value of the token based on the impressions the token has collected.
 
 ## Specification
 
@@ -48,7 +53,6 @@ The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL 
 pragma solidity ^0.8.16;
 
 interface IRMRKEmotable is IERC165 {
-
     /**
      * @notice Used to notify listeners that the token with the specified ID has been emoted to or that the reaction has been revoked.
      * @dev The event SHOULD only be emitted if the state of the emote is changed.
