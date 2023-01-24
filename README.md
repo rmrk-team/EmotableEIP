@@ -48,6 +48,22 @@ The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL 
 pragma solidity ^0.8.16;
 
 interface IRMRKEmotable is IERC165 {
+
+    /**
+     * @notice Used to notify listeners that the token with the specified ID has been emoted to or that the reaction has been revoked.
+     * @dev The event SHOULD only be emitted if the state of the emote is changed.
+     * @param emoter Address of the account that emoted or revoked the reaction to the token
+     * @param tokenId ID of the token
+     * @param emoji Unicode identifier of the emoji
+     * @param on Boolean value signifying whether the token was emoted to (`true`) or if the reaction has been revoked (`false`)
+     */
+    event Emoted(
+        address indexed emoter,
+        uint256 indexed tokenId,
+        bytes4 emoji,
+        bool on
+    );
+
     /**
      * @notice Used to get the number of emotes for a specific emoji on a token.
      * @param tokenId ID of the token to check for emoji count
