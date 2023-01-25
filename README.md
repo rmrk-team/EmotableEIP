@@ -96,7 +96,7 @@ interface IRMRKEmotable is IERC165 {
 Designing the proposal, we considered the following questions:
 
 1. **Does the proposal support custom emotes or only the Unicode specified ones?**\
-The proposal only accepts the Unicode identifier which is a `bytes4` vlaue. This means that while we encourage implementers to add the reactions using standardized emojis, the values not covered by the Unicode standard can be used for custom emotes. The only drawback being that the interface displaying the reactions will have to know what kind of image to render and such additions will probably be limited to the interface or marketplace in which they were made.
+The proposal only accepts the Unicode identifier which is a `bytes4` value. This means that while we encourage implementers to add the reactions using standardized emojis, the values not covered by the Unicode standard can be used for custom emotes. The only drawback being that the interface displaying the reactions will have to know what kind of image to render and such additions will probably be limited to the interface or marketplace in which they were made.
 2. **Should the proposal use emojis to relay the impressions of NFTs or some other method?**\
 The impressions could have been done using user-supplied strings or numeric values, yet we decided to use emojis since they are a well established mean of relaying impressions and emotions.
 
