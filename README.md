@@ -2,7 +2,7 @@
 eip: x
 title: Emotable Extension for Non-Fungible Tokens
 description: An interface for Non-Fungible Tokens extension allowing for reacting to them using Unicode emojis.
-author: Bruno Škvorc (@Swader), Steven Pineda (@steven2308), Stevan Bogosavljevic (@stevyhacker), Jan Turk (@ThunderDeliverer)
+author: Bruno Škvorc (@Swader), Steven Pineda (@steven2308), Stevan Bogosavljevic (@stevyhacker), Jan Turk (@ThunderDeliverer), Viktor Valastin (@vikiival), Matej Nemcek (@yangwao)
 discussions-to: x
 status: Draft
 type: Standards Track
