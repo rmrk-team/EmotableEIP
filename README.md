@@ -126,6 +126,10 @@ The same security considerations as with [EIP-721](./eip-721.md) apply: hidden l
 
 Caution is advised when dealing with non-audited contracts.
 
+## Credits
+
+[The origin and inspiration](https://github.com/rmrk-team/rmrk-spec/issues/10) for this EIP comes from [@vikiival](https://github.com/vikiival) & [@yangwao](https://github.com/yangwao)
+
 ## Copyright
 
 Copyright and related rights waived via [CC0](../LICENSE.md).
