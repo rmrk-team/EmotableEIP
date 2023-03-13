@@ -1,10 +1,10 @@
 ---
-eip: x
+eip: 6381
 title: Emotable Extension for Non-Fungible Tokens
-description: An interface for Non-Fungible Tokens extension allowing for reacting to them using Unicode emojis.
+description: React to Non-Fungible Tokens using Unicode emojis.
 author: Bruno Škvorc (@Swader), Steven Pineda (@steven2308), Stevan Bogosavljevic (@stevyhacker), Jan Turk (@ThunderDeliverer)
-discussions-to: x
-status: Draft
+discussions-to: https://ethereum-magicians.org/t/eip-6381-emotable-extension-for-non-fungible-tokens/12710
+status: Review
 type: Standards Track
 category: ERC
 created: 2023-01-22
@@ -13,7 +13,7 @@ requires: 165, 721
 
 ## Abstract
 
-The Emotable Extension for Non-Fungible Tokens standard extends [EIP-721](./eip-721.md) by allowing NFTs to be emoted at.
+The Emotable Extension for Non-Fungible Tokens standard extends [ERC-721](./eip-721.md) by allowing NFTs to be emoted at.
 
 This proposal introduces the ability to react to NFTs using Unicode standardized emoji.
 
@@ -21,7 +21,9 @@ This proposal introduces the ability to react to NFTs using Unicode standardized
 
 With NFTs being a widespread form of tokens in the Ethereum ecosystem and being used for a variety of use cases, it is time to standardize additional utility for them. Having the ability for anyone to interact with an NFT introduces an interactive aspect to owning an NFT and unlocks feedback-based NFT mechanics.
 
-This EIP introduces new utilities for [EIP-721](./eip-721.md) based tokens in the following areas:
+
+This ERC introduces new utilities for [ERC-721](./eip-721.md) based tokens in the following areas:
+
 
 - [Interactivity](#interactivity)
 - [Feedback based evolution](#feedback-based-evolution)
@@ -39,20 +41,20 @@ Current solutions are either proprietary or off-chain and therefore subject to m
 
 ### Valuation
 
-Current NFT market heavily relies on previous values the token has been sold for, the lowest price of the listed token and the scarcity data provided by the marketplace. There is no real time indication of admiration or desirability of a specific token. Having the ability for users to emote to the tokens adds the possibility of potential buyers and sellers gageing the value of the token based on the impressions the token has collected.
+Current NFT market heavily relies on previous values the token has been sold for, the lowest price of the listed token and the scarcity data provided by the marketplace. There is no real time indication of admiration or desirability of a specific token. Having the ability for users to emote to the tokens adds the possibility of potential buyers and sellers gauging the value of the token based on the impressions the token has collected.
 
 ## Specification
 
 The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in RFC 2119.
 
 ```solidity
-/// @title EIP-x Emotable Extension for Non-Fungible Tokens
-/// @dev See https://eips.ethereum.org/EIPS/eip-5773
-/// @dev Note: the ERC-165 identifier for this interface is 0x0.
+/// @title EIP-6381 Emotable Extension for Non-Fungible Tokens
+/// @dev See https://eips.ethereum.org/EIPS/eip-6381
+/// @dev Note: the ERC-165 identifier for this interface is 0x580d1840.
 
 pragma solidity ^0.8.16;
 
-interface IRMRKEmotable is IERC165 {
+interface IEmotable is IERC165 {
     /**
      * @notice Used to notify listeners that the token with the specified ID has been emoted to or that the reaction has been revoked.
      * @dev The event SHOULD only be emitted if the state of the emote is changed.
@@ -74,7 +76,7 @@ interface IRMRKEmotable is IERC165 {
      * @param emoji Unicode identifier of the emoji
      * @return Number of emotes with the emoji on the token
      */
-    function getEmoteCount(
+    function emoteCountOf(
         uint256 tokenId,
         bytes4 emoji
     ) external view returns (uint256);
@@ -102,27 +104,27 @@ The impressions could have been done using user-supplied strings or numeric valu
 
 ## Backwards Compatibility
 
-The Emotable token standard is fully compatible with [EIP-721](./epi-721.md) and with the robust tooling available for implementations of EIP-721 as well as with the existing EIP-721 infrastructure.
+The Emotable token standard is fully compatible with [ERC-721](./eip-721.md) and with the robust tooling available for implementations of ERC-721 as well as with the existing ERC-721 infrastructure.
 
 ## Test Cases
 
-Tests are included in [`emotable.ts`](../assets/eip-x/test/emotable.ts).
+Tests are included in [`emotable.ts`](../assets/eip-6381/test/emotable.ts).
 
 To run them in terminal, you can use the following commands:
 
 ```
-cd ../assets/eip-x
+cd ../assets/eip-6381
 npm install
 npx hardhat test
 ```
 
 ## Reference Implementation
 
-See [`Emotable.sol`](../assets/eip-x/contracts/Emotable.sol).
+See [`Emotable.sol`](../assets/eip-6381/contracts/Emotable.sol).
 
 ## Security Considerations
 
-The same security considerations as with [EIP-721](./eip-721.md) apply: hidden logic may be present in any of the functions, including burn, add asset, accept asset, and more.
+The same security considerations as with [ERC-721](./eip-721.md) apply: hidden logic may be present in any of the functions, including burn, add asset, accept asset, and more.
 
 Caution is advised when dealing with non-audited contracts.
 
