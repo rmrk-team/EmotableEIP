@@ -3,8 +3,9 @@
 pragma solidity ^0.8.16;
 
 import "./IEmotableRepository.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
-abstract contract EmotableRepository is IEmotableRepository {
+contract EmotableRepository is IEmotableRepository {
     // Used to avoid double emoting and control undoing
     mapping(address => mapping(address => mapping(uint256 => mapping(bytes4 => uint256))))
         private _emotesUsedByEmoter; // Cheaper than using a bool

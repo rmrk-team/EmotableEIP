@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
  * @title ERC721Mock
  * Used for tests
  */
-contract ERC721Mock is ERC721, Emotable {
+contract ERC721Mock is ERC721 {
     constructor(
         string memory name,
         string memory symbol
