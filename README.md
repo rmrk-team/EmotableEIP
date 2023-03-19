@@ -8,7 +8,7 @@ status: Review
 type: Standards Track
 category: ERC
 created: 2023-01-22
-requires: 165, 721
+requires: 165
 ---
 
 ## Abstract
