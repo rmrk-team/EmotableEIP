@@ -39,7 +39,6 @@ contract EmotableRepository is IERC6381 {
             emoji
         ] == 1;
         if (currentVal != state) {
-            _beforeEmote(collection, tokenId, emoji, state);
             if (state) {
                 _emotesPerToken[collection][tokenId][emoji] += 1;
             } else {
@@ -49,7 +48,6 @@ contract EmotableRepository is IERC6381 {
                 ? 1
                 : 0;
             emit Emoted(msg.sender, collection, tokenId, emoji, state);
-            _afterEmote(collection, tokenId, emoji, state);
         }
     }
 
