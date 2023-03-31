@@ -34,7 +34,7 @@ contract EmotableRepository is IERC6381 {
         uint256 tokenId,
         bytes4 emoji,
         bool state
-    ) internal virtual {
+    ) public override {
         bool currentVal = _emotesUsedByEmoter[msg.sender][collection][tokenId][
             emoji
         ] == 1;
