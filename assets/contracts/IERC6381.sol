@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.16;
 
-interface IEmotableRepository {
+interface IERC6381 {
     event Emoted(
         address indexed emoter,
         address indexed collection,

@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.16;
 
-import "./IEmotableRepository.sol";
+import "./IERC6381.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
-contract EmotableRepository is IEmotableRepository {
+contract EmotableRepository is IERC6381 {
     // Used to avoid double emoting and control undoing
     mapping(address => mapping(address => mapping(uint256 => mapping(bytes4 => uint256))))
         private _emotesUsedByEmoter; // Cheaper than using a bool
@@ -29,16 +29,7 @@ contract EmotableRepository is IEmotableRepository {
         return _emotesUsedByEmoter[emoter][collection][tokenId][emoji] == 1;
     }
 
-     function emote(
-        address collection,
-        uint256 tokenId,
-        bytes4 emoji,
-        bool state
-    ) external override {
-        _emote(collection, tokenId, emoji, state);
-    }
-
-    function _emote(
+    function emote(
         address collection,
         uint256 tokenId,
         bytes4 emoji,
@@ -62,25 +53,11 @@ contract EmotableRepository is IEmotableRepository {
         }
     }
 
-    function _beforeEmote(
-        address collection,
-        uint256 tokenId,
-        bytes4 emoji,
-        bool state
-    ) internal virtual {}
-
-    function _afterEmote(
-        address collection,
-        uint256 tokenId,
-        bytes4 emoji,
-        bool state
-    ) internal virtual {}
-
     function supportsInterface(
         bytes4 interfaceId
     ) public view virtual returns (bool) {
         return
-            interfaceId == type(IEmotableRepository).interfaceId ||
+            interfaceId == type(IERC6381).interfaceId ||
             interfaceId == type(IERC165).interfaceId;
     }
 }

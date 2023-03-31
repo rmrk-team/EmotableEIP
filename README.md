@@ -86,7 +86,6 @@ interface IERC6381 /*is IERC165*/ {
     /**
      * @notice Used to get the information on whether the specified address has used a specific emoji on a specific
      *  token.
-     * @dev As storing a uint256 is cheaper than a bool, we use 1 for true and 0 for false.
      * @param emoter Address of the account we are checking for a reaction to a token
      * @param collection Address of the collection smart contract containing the token being checked for emoji reaction
      * @param tokenId ID of the token being checked for emoji reaction
@@ -124,7 +123,7 @@ interface IERC6381 /*is IERC165*/ {
 The address of the Emotable repository smart contract is designed to resemble the function it serves. It starts with `0x311073` which is the abstract representation of `EMOTE`. The address is:
 
 ```
-0x31107309b920cb6DA75A2876a788daf7Ca19060D
+0x311073D39F5ef05981ff11a61fEB6440E203a343
 ```
 
 ## Rationale
@@ -135,11 +134,9 @@ Designing the proposal, we considered the following questions:
 The proposal only accepts the Unicode identifier which is a `bytes4` value. This means that while we encourage implementers to add the reactions using standardized emojis, the values not covered by the Unicode standard can be used for custom emotes. The only drawback being that the interface displaying the reactions will have to know what kind of image to render and such additions will probably be limited to the interface or marketplace in which they were made.
 2. **Should the proposal use emojis to relay the impressions of NFTs or some other method?**\
 The impressions could have been done using user-supplied strings or numeric values, yet we decided to use emojis since they are a well established mean of relaying impressions and emotions.
-3. **Should the proposal establish an emotable estension or a common-good repository?**\
-Initially we set out to create an emotable extension to be used with any ERC-721 compilant tokens. However, we realized that the proposal would be more useful if it was a common-good repository of emotable tokens. This way, the tokens that can be reacted to are not only the new ones but also the old ones that have been around since before the proposal.
-4. **Should we use a pre-determined address for the repository or just standardize the interface and force potential users to search for a deployed repository?**\
-We decided to use a pre-determined address for the repository since it would be easier for users to find and use it. This way, the users would not have to search for a deployed repository and they would not have to worry about the repository being deployed on a different address than the one they are used to.\
-Additional benefit of using a pre-determined address is that all of the reactions on a chain are collected in one place. This way, the users can see all of the reactions on a chain and be assured that the reactions they are seeing are all of the reactions on a given chain.
+3. **Should the proposal establish an emotable extension or a common-good repository?**\
+Initially we set out to create an emotable extension to be used with any ERC-721 compilant tokens. However, we realized that the proposal would be more useful if it was a common-good repository of emotable tokens. This way, the tokens that can be reacted to are not only the new ones but also the old ones that have been around since before the proposal.\
+In line with this decision, we decided to calculate a deterministic address for the repository smart contract. This way, the repository can be used by any NFT collection without the need to search for the address on the given chain.
 
 ## Backwards Compatibility
 
