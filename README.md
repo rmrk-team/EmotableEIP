@@ -13,7 +13,7 @@ requires: 165
 
 ## Abstract
 
-The Public Non-Fungible Token Emote Repository standard provides an enhanced interactive utility for [ERC-721](./eip-721.md) by allowing NFTs to be emoted at.
+The Public Non-Fungible Token Emote Repository standard provides an enhanced interactive utility for [ERC-721](./eip-721.md) and [ERC-1155](./eip-1155.md) by allowing NFTs to be emoted at.
 
 This proposal introduces the ability to react to NFTs using Unicode standardized emoji in a public non-gated repository smart contract that is accessible at the same address in all of the networks.
 
