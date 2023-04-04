@@ -123,7 +123,7 @@ interface IERC6381 /*is IERC165*/ {
 The address of the Emotable repository smart contract is designed to resemble the function it serves. It starts with `0x311073` which is the abstract representation of `EMOTE`. The address is:
 
 ```
-0x311073D39F5ef05981ff11a61fEB6440E203a343
+TBA
 ```
 
 ## Rationale
