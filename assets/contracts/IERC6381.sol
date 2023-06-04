@@ -37,6 +37,14 @@ interface IERC6381 {
         bytes4[] memory emojis
     ) external view returns (bool[] memory);
 
+    function prepareMessageToPresignEmote(
+        address collection,
+        uint256 tokenId,
+        bytes4 emoji,
+        bool state,
+        uint256 deadline
+    ) external view returns (bytes32);
+
     function emote(
         address collection,
         uint256 tokenId,

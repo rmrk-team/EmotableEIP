@@ -10,16 +10,13 @@ error ExpiredPresignedEmote();
 error InvalidSignature();
 
 contract EmotableRepository is IERC6381 {
-    bytes32 public constant DOMAIN_SEPARATOR = keccak256(
+    bytes32 public immutable DOMAIN_SEPARATOR = keccak256(
         abi.encode(
             "ERC-6381: Public Non-Fungible Token Emote Repository",
             "1",
             block.chainid,
             address(this)
         )
-    );
-    bytes32 public constant EMOTE_TYPEHASH = keccak256(
-        "emote(address collection,uint256 tokenId,bytes4 emoji,bool state)"
     );
 
     // Used to avoid double emoting and control undoing
@@ -128,7 +125,7 @@ contract EmotableRepository is IERC6381 {
         }
 
         bool currentVal;
-        for (uint256 i; i < emoters.length; ) {
+        for (uint256 i; i < collections.length; ) {
             currentVal = _emotesUsedByEmoter[msg.sender][collections[i]][tokenIds[i]][
                 emojis[i]
             ] == 1;
@@ -148,6 +145,25 @@ contract EmotableRepository is IERC6381 {
             }
         }
     }
+    
+    function prepareMessageToPresignEmote(
+        address collection,
+        uint256 tokenId,
+        bytes4 emoji,
+        bool state,
+        uint256 deadline
+    ) public view returns (bytes32) {
+        return keccak256(
+            abi.encode(
+                DOMAIN_SEPARATOR,
+                collection,
+                tokenId,
+                emoji,
+                state,
+                deadline
+            )
+        );
+    }
 
     function presignedEmote(
         address collection,
@@ -164,11 +180,10 @@ contract EmotableRepository is IERC6381 {
         }
         bytes32 digest = keccak256(
             abi.encodePacked(
-                "\x19\x01",
-                DOMAIN_SEPARATOR,
+                "\x19Ethereum Signed Message:\n32",
                 keccak256(
                     abi.encode(
-                        EMOTE_TYPEHASH,
+                        DOMAIN_SEPARATOR,
                         collection,
                         tokenId,
                         emoji,
@@ -224,17 +239,16 @@ contract EmotableRepository is IERC6381 {
         bytes32 digest;
         address signer;
         bool currentVal;
-        for (uint256 i; i < emoters.length; ) {
+        for (uint256 i; i < collections.length; ) {
             if (block.timestamp > deadlines[i]){
                 revert ExpiredPresignedEmote();
             }
             digest = keccak256(
                 abi.encodePacked(
-                    "\x19\x01",
-                    DOMAIN_SEPARATOR,
+                    "\x19Ethereum Signed Message:\n32",
                     keccak256(
                         abi.encode(
-                            EMOTE_TYPEHASH,
+                            DOMAIN_SEPARATOR,
                             collections[i],
                             tokenIds[i],
                             emojis[i],
