@@ -307,6 +307,10 @@ While we did not intend to add this as part of the proposal when drafting it, we
 6. **How do we ensure that emoting on someone else's behalf is legitimate?**\
 We could add delegates to the proposal; when a user delegates their right to emote to someone else, the delegate can emote on their behalf. However, this would add a lot of complexity and additional logic to the proposal.\
 Using ECDSA signatures, we can ensure that the user has given their consent to emote on their behalf. This way, the user can sign a message with the parameters of the emote and the signature can be submitted by someone else.
+7. **Should we add chain ID as a parameter when reacting to a token?**\
+During the course of discussion of the proposal, a suggestion arose that we could add chain ID as a parameter when reacting to a token. This would allow the users to emote on the token of one chain on another chain.\
+We decided against this as we feel that additional parameter would rarely be used and would add additional cost to the reaction transactions. If the collection smart contract wants to utilize on-chain emotes to tokens they contain, they require the reactions to be recorded on the same chain. Marketplaces and wallets integrating this proposal will rely on reactions to reside in the same chain as well, because if chain ID parameter was supported this would mean that they would need to query the repository smart contract on all of the chains the repository is deployed in order to get the reactions for a given token.\
+Additionally, if the collection creator wants users to record their reactions on a different chain, they can still direct the users to do just that. The repository does not validate the existence of the token being reacted to, which in theory means that you can react to non-existent token or to a token that does not exist yet. The likelyhood of a differet collection existing at the same address on another chain is significantly low, so the users can react using the collection's address on another chain and it is very unlikely that they will unintentionally react to another collection's token.
 
 ## Backwards Compatibility
 
