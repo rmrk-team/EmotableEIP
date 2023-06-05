@@ -174,7 +174,7 @@ contract EmotableRepository is IERC6381 {
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) public {
+    ) public view {
         if(block.timestamp > deadline){
             revert ExpiredPresignedEmote();
         }

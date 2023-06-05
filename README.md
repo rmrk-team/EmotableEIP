@@ -135,7 +135,7 @@ interface IERC6381 /*is IERC165*/ {
     /**
      * @notice Used to get the message to be signed by the `emoter` in order for the reaction to be submitted by someone
      *  else.
-     * @param collection The addresses of the collection smart contract containing the token being emoted at
+     * @param collection The address of the collection smart contract containing the token being emoted at
      * @param tokenId ID of the token being emoted
      * @param emoji Unicode identifier of the emoji
      * @param state Boolean value signifying whether to emote (`true`) or undo (`false`) emote
@@ -190,7 +190,7 @@ interface IERC6381 /*is IERC165*/ {
      * @dev MUST revert if the lengths of the `collections`, `tokenIds`, `emojis` and `states` arrays are not equal.
      * @dev MUST revert if the `deadline` has passed.
      * @dev MUST revert if the recovered address is the zero address.
-     * @param collection Addresses of the collections containing the token being emoted at
+     * @param collection The address of the collection smart contract containing the token being emoted at
      * @param tokenId IDs of the token being emoted
      * @param emoji Unicode identifier of the emoji
      * @param states Boolean value signifying whether to emote (`true`) or undo (`false`) emote
@@ -300,7 +300,7 @@ The impressions could have been done using user-supplied strings or numeric valu
 Initially we set out to create an emotable extension to be used with any ERC-721 compilant tokens. However, we realized that the proposal would be more useful if it was a common-good repository of emotable tokens. This way, the tokens that can be reacted to are not only the new ones but also the old ones that have been around since before the proposal.\
 In line with this decision, we decided to calculate a deterministic address for the repository smart contract. This way, the repository can be used by any NFT collection without the need to search for the address on the given chain.
 4. **Should we include only single-action operations, only multi-action operations, or both?**\
-We've considered including only single-action operations, where the user is only able to react with a single emoji to a sinle token, but we decided to include both single-action and multi-action operations. This way, the users can choose whether they want to emote or undo emote on a single token or on multiple tokens at once.\
+We've considered including only single-action operations, where the user is only able to react with a single emoji to a single token, but we decided to include both single-action and multi-action operations. This way, the users can choose whether they want to emote or undo emote on a single token or on multiple tokens at once.\
 This decision was made for the long-term viability of the proposal. Based on the gas cost of the network and the number of tokens in the collection, the user can choose the most cost-effective way of emoting.
 5. **Should we add the ability to emote on someone else's behalf?**\
 While we did not intend to add this as part of the proposal when drafting it, we realized that it would be a useful feature for it. This way, the users can emote on behalf of someone else, for example, if they are not able to do it themselves or if the emote is earned through an off-chain activity.
@@ -310,7 +310,7 @@ Using ECDSA signatures, we can ensure that the user has given their consent to e
 7. **Should we add chain ID as a parameter when reacting to a token?**\
 During the course of discussion of the proposal, a suggestion arose that we could add chain ID as a parameter when reacting to a token. This would allow the users to emote on the token of one chain on another chain.\
 We decided against this as we feel that additional parameter would rarely be used and would add additional cost to the reaction transactions. If the collection smart contract wants to utilize on-chain emotes to tokens they contain, they require the reactions to be recorded on the same chain. Marketplaces and wallets integrating this proposal will rely on reactions to reside in the same chain as well, because if chain ID parameter was supported this would mean that they would need to query the repository smart contract on all of the chains the repository is deployed in order to get the reactions for a given token.\
-Additionally, if the collection creator wants users to record their reactions on a different chain, they can still direct the users to do just that. The repository does not validate the existence of the token being reacted to, which in theory means that you can react to non-existent token or to a token that does not exist yet. The likelyhood of a differet collection existing at the same address on another chain is significantly low, so the users can react using the collection's address on another chain and it is very unlikely that they will unintentionally react to another collection's token.
+Additionally, if the collection creator wants users to record their reactions on a different chain, they can still direct the users to do just that. The repository does not validate the existence of the token being reacted to, which in theory means that you can react to non-existent token or to a token that does not exist yet. The likelihood of a different collection existing at the same address on another chain is significantly low, so the users can react using the collection's address on another chain and it is very unlikely that they will unintentionally react to another collection's token.
 
 ## Backwards Compatibility
 
