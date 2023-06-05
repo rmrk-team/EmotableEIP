@@ -239,6 +239,47 @@ interface IERC6381 /*is IERC165*/ {
 }
 ```
 
+### Message format for presigned emotes
+
+The message to be signed by the `emoter` in order for the reaction to be submitted by someone else is formatted as follows:
+
+```solidity
+keccak256(
+        abi.encode(
+            DOMAIN_SEPARATOR,
+            collection,
+            tokenId,
+            emoji,
+            state,
+            deadline
+        )
+    );
+```
+
+The values passed when generating the message to be signed are:
+
+- `DOMAIN_SEPARATOR` - The domain separator of the Emotable repository smart contract
+- `collection` - Address of the collection containing the token being emoted at
+- `tokenId` - ID of the token being emoted
+- `emoji` - Unicode identifier of the emoji
+- `state` - Boolean value signifying whether to emote (`true`) or undo (`false`) emote
+- `deadline` - UNIX timestamp of the deadline for the signature to be submitted
+
+The `DOMAIN_SEPARATOR` is generated as follows:
+
+```solidity
+keccak256(
+        abi.encode(
+            "ERC-6381: Public Non-Fungible Token Emote Repository",
+            "1",
+            block.chainid,
+            address(this)
+        )
+    );
+```
+
+Each chain, that the Emotable repository smart contract is deployed on, will have a different `DOMAIN_SEPARATOR` value due to chain IDs being different.
+
 ### Pre-determined address of the Emotable repository
 
 The address of the Emotable repository smart contract is designed to resemble the function it serves. It starts with `0x311073` which is the abstract representation of `EMOTE`. The address is:
@@ -258,6 +299,14 @@ The impressions could have been done using user-supplied strings or numeric valu
 3. **Should the proposal establish an emotable extension or a common-good repository?**\
 Initially we set out to create an emotable extension to be used with any ERC-721 compilant tokens. However, we realized that the proposal would be more useful if it was a common-good repository of emotable tokens. This way, the tokens that can be reacted to are not only the new ones but also the old ones that have been around since before the proposal.\
 In line with this decision, we decided to calculate a deterministic address for the repository smart contract. This way, the repository can be used by any NFT collection without the need to search for the address on the given chain.
+4. **Should we include only single-action operations, only multi-action operations, or both?**\
+We've considered including only single-action operations, where the user is only able to react with a single emoji to a sinle token, but we decided to include both single-action and multi-action operations. This way, the users can choose whether they want to emote or undo emote on a single token or on multiple tokens at once.\
+This decision was made for the long-term viability of the proposal. Based on the gas cost of the network and the number of tokens in the collection, the user can choose the most cost-effective way of emoting.
+5. **Should we add the ability to emote on someone else's behalf?**\
+While we did not intend to add this as part of the proposal when drafting it, we realized that it would be a useful feature for it. This way, the users can emote on behalf of someone else, for example, if they are not able to do it themselves or if the emote is earned through an off-chain activity.
+6. **How do we ensure that emoting on someone else's behalf is legitimate?**\
+We could add delegates to the proposal; when a user delegates their right to emote to someone else, the delegate can emote on their behalf. However, this would add a lot of complexity and additional logic to the proposal.\
+Using ECDSA signatures, we can ensure that the user has given their consent to emote on their behalf. This way, the user can sign a message with the parameters of the emote and the signature can be submitted by someone else.
 
 ## Backwards Compatibility
 
@@ -281,7 +330,11 @@ See [`EmotableRepository.sol`](../assets/eip-6381/contracts/EmotableRepository.s
 
 ## Security Considerations
 
-The same security considerations as with [ERC-721](./eip-721.md) apply: hidden logic may be present in any of the functions, including burn, add asset, accept asset, and more.
+The proposal does not envision handling any form of assets from the user, so the assets should not be at risk when interacting with an ERC-6381 repository.
+
+The ability to use ECDSA signatures to emote on someone else's behalf introduces the risk of a replay attack, which the format of the message to be signed guards against. The `DOMAIN_SEPARATOR` used in the message to be signed is unique to the repository smart contract of the chain it is deployed on. This means that the signature is invalid on any other chain and the ERC-6381 repositories deployed on them should revert the operation if a replay attack is attempted.
+
+Another thing to consider is the ability of presigned message reuse. Since the message includes the signature validity deadline, the message can be reused any number of times before the deadline is reached. The proposal only allows for a single reaction with a given emoji to a specific token to be active, so the presigned message can not be abused to increase the reaction count on the token. However, if the service using the repository relies on the ability to revoke the reaction after certain actions, a valid presigned message can be used to re-react to the token. We suggest that the services using the repository in cnjunction with presigned messages use deadlines that invalidate presigned messages after a reasonalby short period of time.
 
 Caution is advised when dealing with non-audited contracts.
 
