@@ -48,7 +48,7 @@ The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL 
 ```solidity
 /// @title ERC-6381 Emotable Extension for Non-Fungible Tokens
 /// @dev See https://eips.ethereum.org/EIPS/eip-6381
-/// @dev Note: the ERC-165 identifier for this interface is 0x08eb97a6.
+/// @dev Note: the ERC-165 identifier for this interface is 0x761ce19f.
 
 pragma solidity ^0.8.16;
 
@@ -84,6 +84,19 @@ interface IERC6381 /*is IERC165*/ {
     ) external view returns (uint256);
 
     /**
+     * @notice Used to get the number of emotes for a specific emoji on a set of tokens.
+     * @param collection An array of addresses of the collections containing the tokens being checked for emoji count
+     * @param tokenIds An array of IDs of the tokens to check for emoji count
+     * @param emojis An array of unicode identifiers of the emojis
+     * @return An array of numbers of emotes with the emoji on the tokens
+     */
+    function bulkEmoteCountOf(
+        address[] memory collections,
+        uint256[] memory tokenIds,
+        bytes4[] memory emojis
+    ) external view returns (uint256[] memory);
+
+    /**
      * @notice Used to get the information on whether the specified address has used a specific emoji on a specific
      *  token.
      * @param emoter Address of the account we are checking for a reaction to a token
@@ -101,10 +114,46 @@ interface IERC6381 /*is IERC165*/ {
     ) external view returns (bool);
 
     /**
+     * @notice Used to get the information on whether the specified addresses have used specific emojis on specific
+     *  tokens.
+     * @param collections An array of addresses of the collection smart contracts containing the tokens being checked
+     *  for emoji reactions
+     * @param emoters An array of addresses of the accounts we are checking for reactions to tokens
+     * @param tokenIds An array of IDs of the tokens being checked for emoji reactions
+     * @param emojis An array of the ASCII emoji codes being checked for reactions
+     * @return An array of boolean values indicating whether the `emoter`s has used the `emoji`s on the tokens (`true`)
+     *  or not (`false`)
+     */
+    function haveEmotersUsedEmotes(
+        address[] memory emoters,
+        address[] memory collections,
+        uint256[] memory tokenIds,
+        bytes4[] memory emojis
+    ) external view returns (bool[] memory);
+
+    /**
+     * @notice Used to get the message to be signed by the `emoter` in order for the reaction to be submitted by someone
+     *  else.
+     * @param collection The addresses of the collection smart contract containing the token being emoted at
+     * @param tokenId ID of the token being emoted
+     * @param emoji Unicode identifier of the emoji
+     * @param state Boolean value signifying whether to emote (`true`) or undo (`false`) emote
+     * @param deadline UNIX timestamp of the deadline for the signature to be submitted
+     * @return The message to be signed by the `emoter` in order for the reaction to be submitted by someone else
+     */
+    function prepareMessageToPresignEmote(
+        address collection,
+        uint256 tokenId,
+        bytes4 emoji,
+        bool state,
+        uint256 deadline
+    ) external view returns (bytes32);
+
+    /**
      * @notice Used to emote or undo an emote on a token.
      * @dev Does nothing if attempting to set a pre-existent state.
      * @dev MUST emit the `Emoted` event is the state of the emote is changed.
-     * @param collection Address of the collection containing the token being checked for emoji count
+     * @param collection Address of the collection containing the token being emoted at
      * @param tokenId ID of the token being emoted
      * @param emoji Unicode identifier of the emoji
      * @param state Boolean value signifying whether to emote (`true`) or undo (`false`) emote
@@ -114,6 +163,77 @@ interface IERC6381 /*is IERC165*/ {
         uint256 tokenId,
         bytes4 emoji,
         bool state
+    ) external;
+
+    /**
+     * @notice Used to emote or undo an emote on multiple tokens.
+     * @dev Does nothing if attempting to set a pre-existent state.
+     * @dev MUST emit the `Emoted` event is the state of the emote is changed.
+     * @dev MUST revert if the lengths of the `collections`, `tokenIds`, `emojis` and `states` arrays are not equal.
+     * @param collections An array of addresses of the collections containing the tokens being emoted at
+     * @param tokenIds An array of IDs of the tokens being emoted
+     * @param emojis An array of unicode identifiers of the emojis
+     * @param states An array of boolean values signifying whether to emote (`true`) or undo (`false`) emote
+     */
+    function bulkEmote(
+        address[] memory collections,
+        uint256[] memory tokenIds,
+        bytes4[] memory emojis,
+        bool[] memory states
+    ) external;
+
+    /**
+     * @notice Used to emote or undo an emote on someone else's behalf.
+     * @dev Does nothing if attempting to set a pre-existent state.
+     * @dev MUST emit the `Emoted` event is the state of the emote is changed.
+     * @dev MUST revert if the lengths of the `collections`, `tokenIds`, `emojis` and `states` arrays are not equal.
+     * @dev MUST revert if the `deadline` has passed.
+     * @dev MUST revert if the recovered address is the zero address.
+     * @param collection Addresses of the collections containing the token being emoted at
+     * @param tokenId IDs of the token being emoted
+     * @param emoji Unicode identifier of the emoji
+     * @param states Boolean value signifying whether to emote (`true`) or undo (`false`) emote
+     * @param deadline UNIX timestamp of the deadline for the signature to be submitted
+     * @param v `v` value of an ECDSA signature of the message obtained via `prepareMessageToPresignEmote`
+     * @param r `r` value of an ECDSA signature of the message obtained via `prepareMessageToPresignEmote`
+     * @param s `s` value of an ECDSA signature of the message obtained via `prepareMessageToPresignEmote`
+     */
+    function presignedEmote(
+        address collection,
+        uint256 tokenId,
+        bytes4 emoji,
+        bool state,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external;
+
+    /**
+     * @notice Used to bulk emote or undo an emote on someone else's behalf.
+     * @dev Does nothing if attempting to set a pre-existent state.
+     * @dev MUST emit the `Emoted` event is the state of the emote is changed.
+     * @dev MUST revert if the lengths of the `collections`, `tokenIds`, `emojis` and `states` arrays are not equal.
+     * @dev MUST revert if the `deadline` has passed.
+     * @dev MUST revert if the recovered address is the zero address.
+     * @param collections An array of addresses of the collections containing the tokens being emoted at
+     * @param tokenIds An array of IDs of the tokens being emoted
+     * @param emojis An array of unicode identifiers of the emojis
+     * @param states An array of boolean values signifying whether to emote (`true`) or undo (`false`) emote
+     * @param deadline UNIX timestamp of the deadline for the signature to be submitted
+     * @param v An array of `v` values of an ECDSA signatures of the messages obtained via `prepareMessageToPresignEmote`
+     * @param r An array of `r` values of an ECDSA signatures of the messages obtained via `prepareMessageToPresignEmote`
+     * @param s An array of `s` values of an ECDSA signatures of the messages obtained via `prepareMessageToPresignEmote`
+     */
+    function bulkPresignedEmote(
+        address[] memory collections,
+        uint256[] memory tokenIds,
+        bytes4[] memory emojis,
+        bool[] memory states,
+        uint256[] memory deadlines,
+        uint8[] memory v,
+        bytes32[] memory r,
+        bytes32[] memory s
     ) external;
 }
 ```
