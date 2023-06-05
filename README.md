@@ -4,7 +4,8 @@ title: Public Non-Fungible Token Emote Repository
 description: React to any Non-Fungible Tokens using Unicode emojis.
 author: Bruno Škvorc (@Swader), Steven Pineda (@steven2308), Stevan Bogosavljevic (@stevyhacker), Jan Turk (@ThunderDeliverer)
 discussions-to: https://ethereum-magicians.org/t/eip-6381-emotable-extension-for-non-fungible-tokens/12710
-status: Review
+status: Last Call
+last-call-deadline: 2023-05-02
 type: Standards Track
 category: ERC
 created: 2023-01-22
@@ -243,7 +244,7 @@ interface IERC6381 /*is IERC165*/ {
 The address of the Emotable repository smart contract is designed to resemble the function it serves. It starts with `0x311073` which is the abstract representation of `EMOTE`. The address is:
 
 ```
-TBA
+0x311073569e12f7770719497cd3b3aa2db0a0c3d9
 ```
 
 ## Rationale
@@ -264,7 +265,7 @@ The Emote repository standard is fully compatible with [ERC-721](./eip-721.md) a
 
 ## Test Cases
 
-Tests are included in [`emoteRepository.ts`](../assets/eip-6381/test/emoteRepository.ts).
+Tests are included in [`emotableRepository.ts`](../assets/eip-6381/test/emotableRepository.ts).
 
 To run them in terminal, you can use the following commands:
 
@@ -276,7 +277,7 @@ npx hardhat test
 
 ## Reference Implementation
 
-See [`EmoteRepository.sol`](../assets/eip-6381/contracts/EmoteRepository.sol).
+See [`EmotableRepository.sol`](../assets/eip-6381/contracts/EmotableRepository.sol).
 
 ## Security Considerations
 
