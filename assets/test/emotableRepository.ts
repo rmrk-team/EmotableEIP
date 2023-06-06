@@ -41,7 +41,7 @@ describe("RMRKEmotableRepositoryMock", async function () {
   });
 
   it("can support IERC6381", async function () {
-    expect(await repository.supportsInterface("0x761ce19f")).to.equal(true);
+    expect(await repository.supportsInterface("0xd9fac55a")).to.equal(true);
   });
 
   it("can support IERC165", async function () {
@@ -412,6 +412,7 @@ describe("RMRKEmotableRepositoryMock", async function () {
         repository
           .connect(addrs[0])
           .presignedEmote(
+            owner.address,
             token.address,
             tokenId,
             emoji1,
@@ -433,26 +434,19 @@ describe("RMRKEmotableRepositoryMock", async function () {
     });
 
     it("can use presigned emotes to bulk react to token", async function () {
-      const message1 = await repository.prepareMessageToPresignEmote(
-        token.address,
-        tokenId,
-        emoji1,
-        true,
-        bn(9999999999)
-      );
-      const message2 = await repository.prepareMessageToPresignEmote(
-        token.address,
-        tokenId,
-        emoji2,
-        true,
-        bn(9999999999)
+      const messages = await repository.bulkPrepareMessagesToPresignEmote(
+        [token.address, token.address],
+        [tokenId, tokenId],
+        [emoji1, emoji2],
+        [true, true],
+        [bn(9999999999), bn(9999999999)]
       );
 
       const signature1 = await owner.signMessage(
-        ethers.utils.arrayify(message1)
+        ethers.utils.arrayify(messages[0])
       );
       const signature2 = await owner.signMessage(
-        ethers.utils.arrayify(message2)
+        ethers.utils.arrayify(messages[1])
       );
 
       const r1: string = signature1.substring(0, 66);
@@ -466,6 +460,7 @@ describe("RMRKEmotableRepositoryMock", async function () {
         repository
           .connect(addrs[0])
           .bulkPresignedEmote(
+            [owner.address, owner.address],
             [token.address, token.address],
             [tokenId, tokenId],
             [emoji1, emoji2],

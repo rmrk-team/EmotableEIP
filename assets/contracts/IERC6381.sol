@@ -44,6 +44,14 @@ interface IERC6381 {
         bool state,
         uint256 deadline
     ) external view returns (bytes32);
+    
+    function bulkPrepareMessagesToPresignEmote(
+        address[] memory collections,
+        uint256[] memory tokenIds,
+        bytes4[] memory emojis,
+        bool[] memory states,
+        uint256[] memory deadlines
+    ) external view returns (bytes32[] memory);
 
     function emote(
         address collection,
@@ -60,6 +68,7 @@ interface IERC6381 {
     ) external;
 
     function presignedEmote(
+        address emoter,
         address collection,
         uint256 tokenId,
         bytes4 emoji,
@@ -71,6 +80,7 @@ interface IERC6381 {
     ) external;
 
     function bulkPresignedEmote(
+        address[] memory emoters,
         address[] memory collections,
         uint256[] memory tokenIds,
         bytes4[] memory emojis,

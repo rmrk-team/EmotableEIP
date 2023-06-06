@@ -164,8 +164,45 @@ contract EmotableRepository is IERC6381 {
             )
         );
     }
+    
+    function bulkPrepareMessagesToPresignEmote(
+        address[] memory collections,
+        uint256[] memory tokenIds,
+        bytes4[] memory emojis,
+        bool[] memory states,
+        uint256[] memory deadlines
+    ) public view returns (bytes32[] memory) {
+        if(
+            collections.length != tokenIds.length ||
+                collections.length != emojis.length ||
+                collections.length != states.length ||
+                collections.length != deadlines.length
+        ){
+            revert BulkParametersOfUnequalLength();
+        }
+
+        bytes32[] memory messages = new bytes32[](collections.length);
+        for (uint256 i; i < collections.length; ) {
+            messages[i] = keccak256(
+                abi.encode(
+                    DOMAIN_SEPARATOR,
+                    collections[i],
+                    tokenIds[i],
+                    emojis[i],
+                    states[i],
+                    deadlines[i]
+                )
+            );
+            unchecked {
+                ++i;
+            }
+        }
+        
+        return messages;
+    }
 
     function presignedEmote(
+        address emoter,
         address collection,
         uint256 tokenId,
         bytes4 emoji,
@@ -174,7 +211,7 @@ contract EmotableRepository is IERC6381 {
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) public view {
+    ) public {
         if(block.timestamp > deadline){
             revert ExpiredPresignedEmote();
         }
@@ -194,7 +231,7 @@ contract EmotableRepository is IERC6381 {
             )
         );
         address signer = ecrecover(digest, v, r, s);
-        if(signer == address(0)){
+        if(signer != emoter){
             revert InvalidSignature();
         }
         
@@ -215,6 +252,7 @@ contract EmotableRepository is IERC6381 {
     }
     
     function bulkPresignedEmote(
+        address[] memory emoters,
         address[] memory collections,
         uint256[] memory tokenIds,
         bytes4[] memory emojis,
@@ -225,13 +263,14 @@ contract EmotableRepository is IERC6381 {
         bytes32[] memory s
     ) public {
         if(
-            collections.length != tokenIds.length ||
-                collections.length != emojis.length ||
-                collections.length != states.length ||
-                collections.length != deadlines.length ||
-                collections.length != v.length ||
-                collections.length != r.length ||
-                collections.length != s.length
+            emoters.length != collections.length ||
+                emoters.length != tokenIds.length ||
+                emoters.length != emojis.length ||
+                emoters.length != states.length ||
+                emoters.length != deadlines.length ||
+                emoters.length != v.length ||
+                emoters.length != r.length ||
+                emoters.length != s.length
         ){
             revert BulkParametersOfUnequalLength();
         }
@@ -259,7 +298,7 @@ contract EmotableRepository is IERC6381 {
                 )
             );
             signer = ecrecover(digest, v[i], r[i], s[i]);
-            if(signer == address(0)){
+            if(signer != emoters[i]){
                 revert InvalidSignature();
             }
             
