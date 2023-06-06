@@ -49,7 +49,7 @@ The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL 
 ```solidity
 /// @title ERC-6381 Emotable Extension for Non-Fungible Tokens
 /// @dev See https://eips.ethereum.org/EIPS/eip-6381
-/// @dev Note: the ERC-165 identifier for this interface is 0x761ce19f.
+/// @dev Note: the ERC-165 identifier for this interface is 0xd9fac55a.
 
 pragma solidity ^0.8.16;
 
@@ -151,6 +151,24 @@ interface IERC6381 /*is IERC165*/ {
     ) external view returns (bytes32);
 
     /**
+     * @notice Used to get multiple messages to be signed by the `emoter` in order for the reaction to be submitted by someone
+     *  else.
+     * @param collections An array of addresses of the collection smart contracts containing the tokens being emoted at
+     * @param tokenIds An array of IDs of the tokens being emoted
+     * @param emojis An arrau of unicode identifiers of the emojis
+     * @param states An array of boolean values signifying whether to emote (`true`) or undo (`false`) emote
+     * @param deadlines An array of UNIX timestamps of the deadlines for the signatures to be submitted
+     * @return The array of messages to be signed by the `emoter` in order for the reaction to be submitted by someone else
+     */
+    function prepareMessageToPresignEmote(
+        address collection,
+        uint256 tokenId,
+        bytes4 emoji,
+        bool state,
+        uint256 deadline
+    ) external view returns (bytes32);
+
+    /**
      * @notice Used to emote or undo an emote on a token.
      * @dev Does nothing if attempting to set a pre-existent state.
      * @dev MUST emit the `Emoted` event is the state of the emote is changed.
@@ -190,6 +208,7 @@ interface IERC6381 /*is IERC165*/ {
      * @dev MUST revert if the lengths of the `collections`, `tokenIds`, `emojis` and `states` arrays are not equal.
      * @dev MUST revert if the `deadline` has passed.
      * @dev MUST revert if the recovered address is the zero address.
+     * @param emoter The address that presigned the emote
      * @param collection The address of the collection smart contract containing the token being emoted at
      * @param tokenId IDs of the token being emoted
      * @param emoji Unicode identifier of the emoji
@@ -200,6 +219,7 @@ interface IERC6381 /*is IERC165*/ {
      * @param s `s` value of an ECDSA signature of the message obtained via `prepareMessageToPresignEmote`
      */
     function presignedEmote(
+        address emoter,
         address collection,
         uint256 tokenId,
         bytes4 emoji,
@@ -217,6 +237,7 @@ interface IERC6381 /*is IERC165*/ {
      * @dev MUST revert if the lengths of the `collections`, `tokenIds`, `emojis` and `states` arrays are not equal.
      * @dev MUST revert if the `deadline` has passed.
      * @dev MUST revert if the recovered address is the zero address.
+     * @param emoters An array of addresses of the accounts that presigned the emotes
      * @param collections An array of addresses of the collections containing the tokens being emoted at
      * @param tokenIds An array of IDs of the tokens being emoted
      * @param emojis An array of unicode identifiers of the emojis
@@ -227,6 +248,7 @@ interface IERC6381 /*is IERC165*/ {
      * @param s An array of `s` values of an ECDSA signatures of the messages obtained via `prepareMessageToPresignEmote`
      */
     function bulkPresignedEmote(
+        address[] memory emoters,
         address[] memory collections,
         uint256[] memory tokenIds,
         bytes4[] memory emojis,
