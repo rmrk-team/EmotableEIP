@@ -7,40 +7,40 @@ interface IERC6381 {
         address indexed emoter,
         address indexed collection,
         uint256 indexed tokenId,
-        bytes4 emoji,
+        string emoji,
         bool on
     );
 
     function emoteCountOf(
         address collection,
         uint256 tokenId,
-        bytes4 emoji
+        string memory emoji
     ) external view returns (uint256);
 
     function bulkEmoteCountOf(
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis
+        string[] memory emojis
     ) external view returns (uint256[] memory);
 
     function hasEmoterUsedEmote(
         address emoter,
         address collection,
         uint256 tokenId,
-        bytes4 emoji
+        string memory emoji
     ) external view returns (bool);
 
     function haveEmotersUsedEmotes(
         address[] memory emoters,
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis
+        string[] memory emojis
     ) external view returns (bool[] memory);
 
     function prepareMessageToPresignEmote(
         address collection,
         uint256 tokenId,
-        bytes4 emoji,
+        string memory emoji,
         bool state,
         uint256 deadline
     ) external view returns (bytes32);
@@ -48,7 +48,7 @@ interface IERC6381 {
     function bulkPrepareMessagesToPresignEmote(
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis,
+        string[] memory emojis,
         bool[] memory states,
         uint256[] memory deadlines
     ) external view returns (bytes32[] memory);
@@ -56,14 +56,14 @@ interface IERC6381 {
     function emote(
         address collection,
         uint256 tokenId,
-        bytes4 emoji,
+        string memory emoji,
         bool state
     ) external;
 
     function bulkEmote(
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis,
+        string[] memory emojis,
         bool[] memory states
     ) external;
 
@@ -71,7 +71,7 @@ interface IERC6381 {
         address emoter,
         address collection,
         uint256 tokenId,
-        bytes4 emoji,
+        string memory emoji,
         bool state,
         uint256 deadline,
         uint8 v,
@@ -83,7 +83,7 @@ interface IERC6381 {
         address[] memory emoters,
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis,
+        string[] memory emojis,
         bool[] memory states,
         uint256[] memory deadlines,
         uint8[] memory v,

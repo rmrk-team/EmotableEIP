@@ -48,7 +48,7 @@ The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL 
 ```solidity
 /// @title ERC-6381 Emotable Extension for Non-Fungible Tokens
 /// @dev See https://eips.ethereum.org/EIPS/eip-6381
-/// @dev Note: the ERC-165 identifier for this interface is 0xd9fac55a.
+/// @dev Note: the ERC-165 identifier for this interface is 0x1b3327ab.
 
 pragma solidity ^0.8.16;
 
@@ -66,7 +66,7 @@ interface IERC6381 /*is IERC165*/ {
         address indexed emoter,
         address indexed collection,
         uint256 indexed tokenId,
-        bytes4 emoji,
+        string memory emoji,
         bool on
     );
 
@@ -80,7 +80,7 @@ interface IERC6381 /*is IERC165*/ {
     function emoteCountOf(
         address collection,
         uint256 tokenId,
-        bytes4 emoji
+        string memory emoji
     ) external view returns (uint256);
 
     /**
@@ -93,7 +93,7 @@ interface IERC6381 /*is IERC165*/ {
     function bulkEmoteCountOf(
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis
+        string[] memory emojis
     ) external view returns (uint256[] memory);
 
     /**
@@ -110,7 +110,7 @@ interface IERC6381 /*is IERC165*/ {
         address emoter,
         address collection,
         uint256 tokenId,
-        bytes4 emoji
+        string memory emoji
     ) external view returns (bool);
 
     /**
@@ -128,7 +128,7 @@ interface IERC6381 /*is IERC165*/ {
         address[] memory emoters,
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis
+        string[] memory emojis
     ) external view returns (bool[] memory);
 
     /**
@@ -144,7 +144,7 @@ interface IERC6381 /*is IERC165*/ {
     function prepareMessageToPresignEmote(
         address collection,
         uint256 tokenId,
-        bytes4 emoji,
+        string memory emoji,
         bool state,
         uint256 deadline
     ) external view returns (bytes32);
@@ -154,7 +154,7 @@ interface IERC6381 /*is IERC165*/ {
      *  else.
      * @param collections An array of addresses of the collection smart contracts containing the tokens being emoted at
      * @param tokenIds An array of IDs of the tokens being emoted
-     * @param emojis An arrau of unicode identifiers of the emojis
+     * @param emojis An array of unicode identifiers of the emojis
      * @param states An array of boolean values signifying whether to emote (`true`) or undo (`false`) emote
      * @param deadlines An array of UNIX timestamps of the deadlines for the signatures to be submitted
      * @return The array of messages to be signed by the `emoter` in order for the reaction to be submitted by someone else
@@ -162,7 +162,7 @@ interface IERC6381 /*is IERC165*/ {
     function bulkPrepareMessagesToPresignEmote(
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis,
+        string[] memory emojis,
         bool[] memory states,
         uint256[] memory deadlines
     ) external view returns (bytes32[] memory);
@@ -179,7 +179,7 @@ interface IERC6381 /*is IERC165*/ {
     function emote(
         address collection,
         uint256 tokenId,
-        bytes4 emoji,
+        string memory emoji,
         bool state
     ) external;
 
@@ -196,7 +196,7 @@ interface IERC6381 /*is IERC165*/ {
     function bulkEmote(
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis,
+        string[] memory emojis,
         bool[] memory states
     ) external;
 
@@ -221,7 +221,7 @@ interface IERC6381 /*is IERC165*/ {
         address emoter,
         address collection,
         uint256 tokenId,
-        bytes4 emoji,
+        string memory emoji,
         bool state,
         uint256 deadline,
         uint8 v,
@@ -250,7 +250,7 @@ interface IERC6381 /*is IERC165*/ {
         address[] memory emoters,
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis,
+        string[] memory emojis,
         bool[] memory states,
         uint256[] memory deadlines,
         uint8[] memory v,
@@ -314,7 +314,7 @@ The address of the Emotable repository smart contract is designed to resemble th
 Designing the proposal, we considered the following questions:
 
 1. **Does the proposal support custom emotes or only the Unicode specified ones?**\
-The proposal only accepts the Unicode identifier which is a `bytes4` value. This means that while we encourage implementers to add the reactions using standardized emojis, the values not covered by the Unicode standard can be used for custom emotes. The only drawback being that the interface displaying the reactions will have to know what kind of image to render and such additions will probably be limited to the interface or marketplace in which they were made.
+The proposal only accepts the Unicode identifier which is a `string` value. This means that while we encourage implementers to add the reactions using standardized emojis, the values not covered by the Unicode standard can be used for custom emotes. The only drawback being that the interface displaying the reactions will have to know what kind of image to render and such additions will probably be limited to the interface or marketplace in which they were made.
 2. **Should the proposal use emojis to relay the impressions of NFTs or some other method?**\
 The impressions could have been done using user-supplied strings or numeric values, yet we decided to use emojis since they are a well established mean of relaying impressions and emotions.
 3. **Should the proposal establish an emotable extension or a common-good repository?**\

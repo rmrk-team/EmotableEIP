@@ -25,14 +25,14 @@ async function emotableRepositoryFixture() {
   return repository;
 }
 
-describe("RMRKEmotableRepositoryMock", async function () {
+describe("EmotableRepository", async function () {
   let token: ERC721Mock;
   let repository: EmotableRepository;
   let owner: SignerWithAddress;
   let addrs: SignerWithAddress[];
   const tokenId = bn(1);
-  const emoji1 = Buffer.from("😎");
-  const emoji2 = Buffer.from("😁");
+  const emoji1 = "👨‍👩‍👧";
+  const emoji2 = "😁";
 
   beforeEach(async function () {
     [owner, ...addrs] = await ethers.getSigners();
@@ -41,7 +41,7 @@ describe("RMRKEmotableRepositoryMock", async function () {
   });
 
   it("can support IERC6381", async function () {
-    expect(await repository.supportsInterface("0xd9fac55a")).to.equal(true);
+    expect(await repository.supportsInterface("0x1b3327ab")).to.equal(true);
   });
 
   it("can support IERC165", async function () {
