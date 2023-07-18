@@ -20,15 +20,15 @@ contract EmotableRepository is IERC6381 {
     );
 
     // Used to avoid double emoting and control undoing
-    mapping(address => mapping(address => mapping(uint256 => mapping(bytes4 => uint256))))
+    mapping(address => mapping(address => mapping(uint256 => mapping(string => uint256))))
         private _emotesUsedByEmoter; // Cheaper than using a bool
-    mapping(address => mapping(uint256 => mapping(bytes4 => uint256)))
+    mapping(address => mapping(uint256 => mapping(string => uint256)))
         private _emotesPerToken;
 
     function emoteCountOf(
         address collection,
         uint256 tokenId,
-        bytes4 emoji
+        string memory emoji
     ) public view returns (uint256) {
         return _emotesPerToken[collection][tokenId][emoji];
     }
@@ -36,7 +36,7 @@ contract EmotableRepository is IERC6381 {
     function bulkEmoteCountOf(
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis
+        string[] memory emojis
     ) public view returns (uint256[] memory) {
         if(
             collections.length != tokenIds.length ||
@@ -59,7 +59,7 @@ contract EmotableRepository is IERC6381 {
         address emoter,
         address collection,
         uint256 tokenId,
-        bytes4 emoji
+        string memory emoji
     ) public view returns (bool) {
         return _emotesUsedByEmoter[emoter][collection][tokenId][emoji] == 1;
     }
@@ -68,7 +68,7 @@ contract EmotableRepository is IERC6381 {
         address[] memory emoters,
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis
+        string[] memory emojis
     ) public view returns (bool[] memory) {
         if(
             emoters.length != collections.length ||
@@ -91,7 +91,7 @@ contract EmotableRepository is IERC6381 {
     function emote(
         address collection,
         uint256 tokenId,
-        bytes4 emoji,
+        string memory emoji,
         bool state
     ) public {
         bool currentVal = _emotesUsedByEmoter[msg.sender][collection][tokenId][
@@ -113,7 +113,7 @@ contract EmotableRepository is IERC6381 {
     function bulkEmote(
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis,
+        string[] memory emojis,
         bool[] memory states
     ) public {
         if(
@@ -149,7 +149,7 @@ contract EmotableRepository is IERC6381 {
     function prepareMessageToPresignEmote(
         address collection,
         uint256 tokenId,
-        bytes4 emoji,
+        string memory emoji,
         bool state,
         uint256 deadline
     ) public view returns (bytes32) {
@@ -168,7 +168,7 @@ contract EmotableRepository is IERC6381 {
     function bulkPrepareMessagesToPresignEmote(
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis,
+        string[] memory emojis,
         bool[] memory states,
         uint256[] memory deadlines
     ) public view returns (bytes32[] memory) {
@@ -205,7 +205,7 @@ contract EmotableRepository is IERC6381 {
         address emoter,
         address collection,
         uint256 tokenId,
-        bytes4 emoji,
+        string memory emoji,
         bool state,
         uint256 deadline,
         uint8 v,
@@ -255,7 +255,7 @@ contract EmotableRepository is IERC6381 {
         address[] memory emoters,
         address[] memory collections,
         uint256[] memory tokenIds,
-        bytes4[] memory emojis,
+        string[] memory emojis,
         bool[] memory states,
         uint256[] memory deadlines,
         uint8[] memory v,
